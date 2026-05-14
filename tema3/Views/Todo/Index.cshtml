@@ -1,0 +1,68 @@
+﻿@model List<TodoApp.Models.TodoItem>
+
+@{
+    ViewData["Title"] = "TODO App";
+}
+
+<h1>TODO App</h1>
+
+<form asp-action="Add" method="post">
+    <input type="text" name="title" placeholder="Adauga un task nou" />
+    <button type="submit">Adauga</button>
+</form>
+
+<hr />
+
+@if (Model.Count == 0)
+{
+    <p>Nu exista task-uri momentan.</p>
+}
+else
+{
+    <table border="1" cellpadding="8">
+        <tr>
+            <th>ID</th>
+            <th>Task</th>
+            <th>Status</th>
+            <th>Actiuni</th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Id</td>
+
+                <td>
+                    @if (item.IsDone)
+                    {
+                        <span style="text-decoration: line-through;">
+                            @item.Title
+                        </span>
+                    }
+                    else
+                    {
+                        <span>@item.Title</span>
+                    }
+                </td>
+
+                <td>
+                    @(item.IsDone ? "Finalizat" : "Neterminat")
+                </td>
+
+                <td>
+                    <form asp-action="ToggleDone" method="post" style="display:inline;">
+                        <input type="hidden" name="id" value="@item.Id" />
+                        <button type="submit">
+                            @(item.IsDone ? "Marcheaza neterminat" : "Marcheaza finalizat")
+                        </button>
+                    </form>
+
+                    <form asp-action="Delete" method="post" style="display:inline;">
+                        <input type="hidden" name="id" value="@item.Id" />
+                        <button type="submit">Sterge</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </table>
+}
